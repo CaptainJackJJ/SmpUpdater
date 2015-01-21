@@ -30,6 +30,7 @@
 #include "error.h"
 
 #include <wx/string.h>
+#include <wx/utils.h>
 
 #include <sstream>
 #include <rpc.h>
@@ -126,7 +127,7 @@ struct UpdateDownloadSink : public IDownloadSink
         if ( now == -1 || m_downloaded == m_total ||
              ((double(now - m_lastUpdate) / CLOCKS_PER_SEC) >= 0.1) )
         {
-          UI::NotifyDownloadProgress(m_downloaded, m_total);
+          //UI::NotifyDownloadProgress(m_downloaded, m_total);
           m_lastUpdate = now;
         }
     }
@@ -170,11 +171,15 @@ void UpdateDownloader::Run()
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink);
       sink.Close();
-      UI::NotifyUpdateDownloaded(sink.GetFilePath());
+      //UI::NotifyUpdateDownloaded(sink.GetFilePath());
+
+			if (!wxLaunchDefaultApplication(sink.GetFilePath()))
+			{
+			}
     }
     catch ( ... )
     {
-        UI::NotifyUpdateError();
+        //UI::NotifyUpdateError();
         throw;
     }
 }

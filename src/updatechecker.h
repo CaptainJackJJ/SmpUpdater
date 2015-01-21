@@ -27,6 +27,7 @@
 #define _updatechecker_h_
 
 #include "threads.h"
+#include "updatedownloader.h"
 
 #include <string>
 
@@ -66,9 +67,11 @@ protected:
     /// Should give version be ignored?
     virtual bool ShouldSkipUpdate(const Appcast& appcast) const;
 
-protected:
     virtual void Run();
     virtual bool IsJoinable() const { return false; }
+
+protected:
+		UpdateDownloader* m_downloader;
 };
 
 

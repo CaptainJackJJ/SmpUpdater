@@ -14,7 +14,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	win_sparkle_set_appcast_url(feedUrl);
 	win_sparkle_set_app_details(company_name, app_name, app_version);
 	win_sparkle_set_automatic_check_for_updates(1);
-	win_sparkle_set_update_check_interval(3600);
+	win_sparkle_set_update_check_interval(60 * 60);
 
 	win_sparkle_init();
 

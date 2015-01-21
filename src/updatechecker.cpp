@@ -31,6 +31,7 @@
 #include "settings.h"
 #include "download.h"
 #include "utils.h"
+#include "updatedownloader.h"
 
 #include <ctime>
 #include <vector>
@@ -213,7 +214,7 @@ int UpdateChecker::CompareVersions(const string& verA, const string& verB)
                              UpdateChecker::Run()
  *--------------------------------------------------------------------------*/
 
-UpdateChecker::UpdateChecker(): Thread("WinSparkle updates check")
+UpdateChecker::UpdateChecker() : Thread("WinSparkle updates check"), m_downloader(NULL)
 {
 }
 
@@ -243,18 +244,22 @@ void UpdateChecker::Run()
         if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
             // The same or newer version is already installed.
-            UI::NotifyNoUpdates();
+            //UI::NotifyNoUpdates();
             return;
         }
 
         // Check if the user opted to ignore this particular version.
-        if ( ShouldSkipUpdate(appcast) )
-        {
-            UI::NotifyNoUpdates();
-            return;
-        }
+        //if ( ShouldSkipUpdate(appcast) )
+        //{
+        //    UI::NotifyNoUpdates();
+        //    return;
+        //}
 
-        UI::NotifyUpdateAvailable(appcast);
+        //UI::NotifyUpdateAvailable(appcast);
+
+				// Run the download in background.
+				m_downloader = new UpdateDownloader(appcast);
+				m_downloader->Start();
     }
     catch ( ... )
     {

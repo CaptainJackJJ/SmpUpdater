@@ -160,7 +160,36 @@ UpdateDownloader::UpdateDownloader(const Appcast& appcast)
 
 void UpdateDownloader::Run()
 {
-    // no initialization to do, so signal readiness immediately
+  // no initialization to do, so signal readiness immediately
+	SignalReady();
+
+	try
+	{
+		CleanLeftovers();
+
+		const std::wstring tmpdir = CreateUniqueTempDirectory();
+		Settings::WriteConfigValue("UpdateTempDir", tmpdir);
+
+		UpdateDownloadSink sink(*this, tmpdir);
+		DownloadFile(m_appcast.DownloadURL, &sink);
+		sink.Close();
+
+		Settings::WriteConfigValue("InstallerPath", sink.GetFilePath());
+
+		if (false /*"SMP is not active"*/)
+		{
+				if (!wxLaunchDefaultApplication(sink.GetFilePath()))
+					return;
+
+				Settings::WriteConfigValue("InstallerPath", "");
+		}
+	}
+	catch ( ... )
+	{
+		throw;
+	}
+
+#ifdef WINSPARKLE_ORG
     SignalReady();
 
     try
@@ -171,7 +200,7 @@ void UpdateDownloader::Run()
       UpdateDownloadSink sink(*this, tmpdir);
       DownloadFile(m_appcast.DownloadURL, &sink);
       sink.Close();
-      //UI::NotifyUpdateDownloaded(sink.GetFilePath());
+      UI::NotifyUpdateDownloaded(sink.GetFilePath());
 
 			if (!wxLaunchDefaultApplication(sink.GetFilePath()))
 			{
@@ -179,9 +208,10 @@ void UpdateDownloader::Run()
     }
     catch ( ... )
     {
-        //UI::NotifyUpdateError();
+        UI::NotifyUpdateError();
         throw;
     }
+#endif
 }
 
 

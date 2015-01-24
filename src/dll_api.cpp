@@ -47,6 +47,10 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
 {
     try
     {
+			UpdateChecker *check = new UpdateChecker();
+			check->Start();
+
+#ifdef WINSPARKLE_ORG
         // first things first
         UpdateDownloader::CleanLeftovers();
 
@@ -89,6 +93,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_init()
                 //UI::AskForPermission();
             }
         }
+#endif
     }
     CATCH_ALL_EXCEPTIONS
 }

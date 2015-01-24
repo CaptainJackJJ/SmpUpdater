@@ -37,6 +37,7 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <wx/utils.h>
 
 using namespace std;
 
@@ -221,6 +222,78 @@ UpdateChecker::UpdateChecker() : Thread("WinSparkle updates check"), m_downloade
 
 void UpdateChecker::Run()
 {
+	while (true)
+	{
+		// no initialization to do, so signal readiness immediately
+		SignalReady();
+
+		try
+		{
+			//in seconds
+			const int interval = 60 * 60;
+
+			while (true)
+			{
+				time_t lastCheck = 0;
+				Settings::ReadConfigValue("LastCheckTime", lastCheck);
+				const time_t currentTime = time(NULL);
+
+				// Only check for updates in reasonable intervals:
+				if (currentTime - lastCheck >= interval)
+				{
+					const std::string url = Settings::GetAppcastURL();
+					if (url.empty())
+						throw std::runtime_error("Appcast URL not specified.");
+
+					StringDownloadSink appcast_xml;
+					DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
+
+					Appcast appcast = Appcast::Load(appcast_xml.data);
+
+					Settings::WriteConfigValue("LastCheckTime", time(NULL));
+
+					const std::string currentVersion =
+						WideToAnsi(Settings::GetAppBuildVersion());
+
+					// Check if our version is out of date.
+					if (!appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0)
+					{
+						// The same or newer version is already installed.
+						Sleep(1000 * 60);
+						continue;
+					}
+
+					// Run the download in background.
+					m_downloader = new UpdateDownloader(appcast);
+					m_downloader->Start();
+
+					Sleep(1000 * interval);
+				}
+				else
+				{
+					std::wstring InstallerPath;
+					Settings::ReadConfigValue("InstallerPath", InstallerPath);
+
+					if (InstallerPath != L"")//means there is a installer need be lunch
+					{
+						if (false/*"SMP is not active"*/)
+						{
+							if (wxLaunchDefaultApplication(InstallerPath))
+								Settings::WriteConfigValue("InstallerPath", "");
+						}
+					}
+
+					Sleep(1000 * 60);
+				}
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
+	}
+
+#ifdef WINSPARKLE_ORG
     // no initialization to do, so signal readiness immediately
     SignalReady();
 
@@ -244,18 +317,18 @@ void UpdateChecker::Run()
         if ( !appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0 )
         {
             // The same or newer version is already installed.
-            //UI::NotifyNoUpdates();
+            UI::NotifyNoUpdates();
             return;
         }
 
-        // Check if the user opted to ignore this particular version.
-        //if ( ShouldSkipUpdate(appcast) )
-        //{
-        //    UI::NotifyNoUpdates();
-        //    return;
-        //}
+        //Check if the user opted to ignore this particular version.
+        if ( ShouldSkipUpdate(appcast) )
+        {
+            UI::NotifyNoUpdates();
+            return;
+        }
 
-        //UI::NotifyUpdateAvailable(appcast);
+        UI::NotifyUpdateAvailable(appcast);
 
 				// Run the download in background.
 				m_downloader = new UpdateDownloader(appcast);
@@ -266,6 +339,7 @@ void UpdateChecker::Run()
         UI::NotifyUpdateError();
         throw;
     }
+#endif
 }
 
 bool UpdateChecker::ShouldSkipUpdate(const Appcast& appcast) const

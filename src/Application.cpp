@@ -6,7 +6,7 @@
 
 using namespace winsparkle;
 
-const char* feedUrl = "http://winsparkle.org/example/appcast.xml";
+const char* feedUrl = "http://downloads.sourceforge.net/project/smptest/appcast.xml";
 const wchar_t *company_name = L"winsparkle.org";
 const wchar_t *app_name = L"WinSparkle Example App";
 const wchar_t *app_version = L"1.0";
@@ -25,6 +25,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	//---If there is an installer waiting for lunch, then lunch it. 
 	// To lunch installer when os start
 	// Luncher will auto run SMP
+
 	std::wstring InstallerPath;
 	Settings::ReadConfigValue("InstallerPath", InstallerPath);
 
@@ -38,6 +39,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 		if (wxLaunchDefaultApplication(InstallerPath))
 			Settings::WriteConfigValue("InstallerPath", "");
 	}
+
 	//***
 
 

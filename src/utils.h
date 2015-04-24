@@ -28,6 +28,8 @@
 
 #include <string>
 #include <string.h>
+#include <tlhelp32.h>
+#include "Globals.h"
 
 namespace winsparkle
 {
@@ -73,6 +75,45 @@ inline std::wstring AnsiToWide(const std::string& s)
     return ConvertString<char, wchar_t>(s);
 }
 
+inline bool IsSmpRunning()
+{
+	HANDLE toolhelp;
+	PROCESSENTRY32 processinfo;
+	processinfo.dwSize = sizeof(PROCESSENTRY32);
+	BOOL start;
+
+	toolhelp = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	start = Process32First(toolhelp, &processinfo);
+	while (start)
+	{ 
+	 if (wcscmp(processinfo.szExeFile, SMP_PROCESS_NAME) == 0)
+			return true;
+		processinfo.dwSize = sizeof(PROCESSENTRY32);
+		start = Process32Next(toolhelp, &processinfo);
+	}
+	return false;
+}
+
+inline void TerminateSmp()
+{
+	HANDLE toolhelp;
+	PROCESSENTRY32 processinfo;
+	processinfo.dwSize = sizeof(PROCESSENTRY32);
+	BOOL start;
+
+	toolhelp = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	start = Process32First(toolhelp, &processinfo);
+	while (start)
+	{
+		if (wcscmp(processinfo.szExeFile, SMP_PROCESS_NAME) == 0)
+		{
+			::TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, processinfo.th32ProcessID), 0);
+			return;
+		}
+		processinfo.dwSize = sizeof(PROCESSENTRY32);
+		start = Process32Next(toolhelp, &processinfo);
+	}
+}
 
 } // namespace winsparkle
 

@@ -276,7 +276,7 @@ void UpdateChecker::Run()
 
 					if (InstallerPath != L"")//means there is a installer need be lunch
 					{
-						if (false/*"SMP is not active"*/)
+						if (!IsSmpRunning())
 						{
 							if (wxLaunchDefaultApplication(InstallerPath))
 								Settings::WriteConfigValue("InstallerPath", "");

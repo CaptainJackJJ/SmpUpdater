@@ -31,10 +31,8 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 
 	if (InstallerPath != L"")//means there is a installer need be lunch
 	{
-		if (false/*"SMP is active"*/)
-		{
-			//kill SMP
-		}
+		if (IsSmpRunning())
+			TerminateSmp();
 
 		if (wxLaunchDefaultApplication(InstallerPath))
 			Settings::WriteConfigValue("InstallerPath", "");

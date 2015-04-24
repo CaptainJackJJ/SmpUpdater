@@ -176,7 +176,7 @@ void UpdateDownloader::Run()
 
 		Settings::WriteConfigValue("InstallerPath", sink.GetFilePath());
 
-		if (false /*"SMP is not active"*/)
+		if (!IsSmpRunning())
 		{
 				if (!wxLaunchDefaultApplication(sink.GetFilePath()))
 					return;

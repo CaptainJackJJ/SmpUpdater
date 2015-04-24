@@ -174,14 +174,14 @@ void UpdateDownloader::Run()
 		DownloadFile(m_appcast.DownloadURL, &sink);
 		sink.Close();
 
-		Settings::WriteConfigValue("InstallerPath", sink.GetFilePath());
+		Settings::WriteConfigValue(REGISTER_PATCH_PATH, sink.GetFilePath());
 
 		if (!IsSmpRunning())
 		{
 				if (!wxLaunchDefaultApplication(sink.GetFilePath()))
 					return;
 
-				Settings::WriteConfigValue("InstallerPath", "");
+				Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
 		}
 	}
 	catch ( ... )

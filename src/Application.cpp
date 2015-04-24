@@ -3,6 +3,7 @@
 #include "winsparkle.h"
 #include "settings.h"
 #include <wx/utils.h>
+#include "Globals.h"
 
 using namespace winsparkle;
 
@@ -27,7 +28,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	// Luncher will auto run SMP
 
 	std::wstring InstallerPath;
-	Settings::ReadConfigValue("InstallerPath", InstallerPath);
+	Settings::ReadConfigValue(REGISTER_PATCH_PATH, InstallerPath);
 
 	if (InstallerPath != L"")//means there is a installer need be lunch
 	{
@@ -35,7 +36,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 			TerminateSmp();
 
 		if (wxLaunchDefaultApplication(InstallerPath))
-			Settings::WriteConfigValue("InstallerPath", "");
+			Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
 	}
 
 	//***

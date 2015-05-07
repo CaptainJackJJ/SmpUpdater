@@ -271,15 +271,15 @@ void UpdateChecker::Run()
 				}
 				else
 				{
-					std::wstring InstallerPath;
-					Settings::ReadConfigValue(REGISTER_PATCH_PATH, InstallerPath);
+					std::wstring PatchPath;
+					Settings::ReadConfigValue(REGISTER_PATCH_PATH, PatchPath);
 
-					if (InstallerPath != L"")//means there is a installer need be lunch
+					if (PatchPath != L"")//means there is a installer need be lunch
 					{
 						if (!IsSmpRunning())
 						{
-							if (wxLaunchDefaultApplication(InstallerPath))
-								Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
+							LaunchPatch(PatchPath);
+							Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
 						}
 					}
 

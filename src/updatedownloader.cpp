@@ -178,10 +178,8 @@ void UpdateDownloader::Run()
 
 		if (!IsSmpRunning())
 		{
-				if (!wxLaunchDefaultApplication(sink.GetFilePath()))
-					return;
-
-				Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
+			LaunchPatch(sink.GetFilePath());
+			Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
 		}
 	}
 	catch ( ... )

@@ -170,7 +170,7 @@ std::string Settings::GetDefaultRegistryPath()
     if ( !vendor.empty() )
         s += WideToAnsi(vendor) + "\\";
     s += WideToAnsi(Settings::GetAppName());
-    s += "\\WinSparkle";
+    //s += "\\WinSparkle";
 
     return s;
 }

@@ -72,6 +72,7 @@ public:
         return ms_appName;
     }
 
+#ifdef WINSPARKLE_ORG
     /// Return (human-readable) application version
     static std::wstring GetAppVersion()
     {
@@ -92,6 +93,7 @@ public:
         // fallback if build number wasn't set:
         return GetAppVersion();
     }
+#endif
 
     /// Return name of the vendor
     static std::wstring GetCompanyName()

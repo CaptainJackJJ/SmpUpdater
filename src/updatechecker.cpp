@@ -252,11 +252,13 @@ void UpdateChecker::Run()
 
 					Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
-					const std::string currentVersion =
-						WideToAnsi(Settings::GetAppBuildVersion());
+					std::string Version;
+					Settings::ReadConfigValue(REGISTER_PATCH_VERSION, Version);
+					if (Version == "")
+						Settings::ReadConfigValue(REGISTER_PLAYER_VERSION, Version);
 
 					// Check if our version is out of date.
-					if (!appcast.IsValid() || CompareVersions(currentVersion, appcast.Version) >= 0)
+					if (!appcast.IsValid() || CompareVersions(Version, appcast.Version) >= 0)
 					{
 						// The same or newer version is already installed.
 						Sleep(1000 * 60);
@@ -277,10 +279,7 @@ void UpdateChecker::Run()
 					if (PatchPath != L"")//means there is a installer need be lunch
 					{
 						if (!IsSmpRunning())
-						{
 							LaunchPatch(PatchPath);
-							Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
-						}
 					}
 
 					Sleep(1000 * 60);

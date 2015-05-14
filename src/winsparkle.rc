@@ -61,13 +61,13 @@ BEGIN
         BLOCK "040904B0" // US English, Unicode
         BEGIN
             VALUE "Comments", "WinSparkle updates checking library (http://winsparkle.org)."
-            VALUE "CompanyName", "winsparkle.org\0"
+            VALUE "CompanyName", "PirateRabbit\0"
             VALUE "FileDescription", "WinSparkle updater\0"
             VALUE "FileVersion", VER_STR "\0"
             VALUE "InternalName", "WinSparkle\0"
             VALUE "OriginalFilename", "WinSparkle.dll\0"
             VALUE "LegalCopyright", "Copyright (C) 2009-2014 Vaclav Slavik\0"
-            VALUE "ProductName", "WinSparkle\0"
+            VALUE "ProductName", "RabbitPlayer\0"
             VALUE "ProductVersion", VER_STR "\0"
         END
     END

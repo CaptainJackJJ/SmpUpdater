@@ -103,7 +103,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_cleanup()
 {
     try
     {
-        UI::ShutDown();
+        //UI::ShutDown();
 
         // FIXME: shut down any worker UpdateChecker and UpdateDownloader threads too
     }
@@ -251,7 +251,7 @@ WIN_SPARKLE_API void __cdecl win_sparkle_check_update_with_ui()
     try
     {
         // Initialize UI thread and show progress indicator.
-        UI::ShowCheckingUpdates();
+        //UI::ShowCheckingUpdates();
 
         // Then run the actual check in the background.
         UpdateChecker *check = new ManualUpdateChecker();

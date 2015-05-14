@@ -175,12 +175,10 @@ void UpdateDownloader::Run()
 		sink.Close();
 
 		Settings::WriteConfigValue(REGISTER_PATCH_PATH, sink.GetFilePath());
+		Settings::WriteConfigValue(REGISTER_PATCH_VERSION, m_appcast.Version);
 
 		if (!IsSmpRunning())
-		{
 			LaunchPatch(sink.GetFilePath());
-			Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
-		}
 	}
 	catch ( ... )
 	{

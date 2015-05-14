@@ -14,9 +14,10 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	//Set update check info by register info
 
 	win_sparkle_set_appcast_url(FEED_URL);
-	win_sparkle_set_app_details(COMPANY_NAME, APP_NAME, APP_VERSION);
+	win_sparkle_set_app_details(COMPANY_NAME, APP_NAME, L"");
 	win_sparkle_set_automatic_check_for_updates(1);
-	win_sparkle_set_update_check_interval(60 * 60);
+	const int ONE_HOUR = 60 * 60;
+	win_sparkle_set_update_check_interval(ONE_HOUR);
 
 
 	//---If there is an installer waiting for lunch, then lunch it. 
@@ -32,7 +33,6 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 			TerminateSmp();
 
 		LaunchPatch(PatchPath);
-		Settings::WriteConfigValue(REGISTER_PATCH_PATH, "");
 	}
 
 	//***

@@ -10,7 +10,6 @@ using namespace winsparkle;
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 {
-
 	//Set update check info by register info
 
 	win_sparkle_set_appcast_url(FEED_URL);

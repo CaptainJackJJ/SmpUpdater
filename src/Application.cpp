@@ -19,6 +19,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	const int ONE_HOUR = 60 * 60;
 	win_sparkle_set_update_check_interval(ONE_HOUR);
 
+	Settings::WriteConfigValue("LastCheckTime", "0");
 
 	//---If there is an installer waiting for lunch, then lunch it. 
 	// To lunch installer when os start

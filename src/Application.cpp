@@ -4,12 +4,32 @@
 #include "settings.h"
 #include <wx/utils.h>
 #include "Globals.h"
+#include "utils\log.h"
+#include "utils\StringUtil.h"
+#include <shlobj.h>
 
 using namespace winsparkle;
 
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 {
+	wchar_t LogPath[MAX_PATH];
+	HRESULT hr = SHGetFolderPathW(0, CSIDL_MYDOCUMENTS, 0, 0, LogPath);
+	if (!SUCCEEDED(hr))
+		assert(0);
+
+	std::string strLogPath = CStringUtil::WideToAnsi(LogPath) + "\\";
+
+	CLog::Init(strLogPath, CStringUtil::WideToAnsi(APP_NAME));
+
+#ifdef _DEBUG
+	CLog::SetLogLevel(LOG_LEVEL_DEBUG);
+#else
+	CLog::SetLogLevel(LOG_LEVEL_NORMAL);
+#endif
+
+	CLog::Log(LOGINFO, "Updater launch");
+
 	//Set update check info by register info
 
 	win_sparkle_set_appcast_url(FEED_URL);

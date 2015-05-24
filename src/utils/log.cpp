@@ -39,6 +39,7 @@ int         CLog::m_repeatLogLevel;
 std::string CLog::m_repeatLine;
 int         CLog::m_logLevel;
 int         CLog::m_extraLogLevels;
+std::string CLog::m_strModuleName;
 
 CLog::CLog()
 {}
@@ -115,7 +116,7 @@ void CLog::LogString(int logLevel, const std::string& logString)
 	m_reMutex.unlock();
 }
 
-bool CLog::Init(const std::string& path, const std::string& FileName)
+bool CLog::Init(const std::string& path, const std::string& FileName, const std::string& ModuleName)
 {
 	m_reMutex.lock();
 
@@ -124,6 +125,7 @@ bool CLog::Init(const std::string& path, const std::string& FileName)
 	m_logLevel = LOG_LEVEL_DEBUG;
 	m_extraLogLevels = 0;
 
+	m_strModuleName = ModuleName;
   // the log folder location is initialized in the CAdvancedSettings
   // constructor and changed in CApplication::Create()
 
@@ -233,7 +235,7 @@ bool CLog::WriteLogString(int logLevel, const std::string& logString)
                                   minute,
                                   second,
 																	(uint64_t)::GetCurrentThreadId(),
-                                  levelNames[logLevel]) + strData;
+																	levelNames[logLevel]) + m_strModuleName + "  " + strData;
 
   return m_platform.WriteStringToLog(strData);
 }

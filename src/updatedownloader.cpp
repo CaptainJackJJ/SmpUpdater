@@ -36,6 +36,8 @@
 #include <rpc.h>
 #include <time.h>
 
+#include "utils\log.h"
+
 namespace winsparkle
 {
 
@@ -165,6 +167,8 @@ void UpdateDownloader::Run()
 
 	try
 	{
+		CLog::Log(LOGINFO, "Start download thread");
+
 		CleanLeftovers();
 
 		const std::wstring tmpdir = CreateUniqueTempDirectory();
@@ -174,14 +178,20 @@ void UpdateDownloader::Run()
 		DownloadFile(m_appcast.DownloadURL, &sink);
 		sink.Close();
 
+		CLog::Log(LOGINFO, "Finished download");
+
 		Settings::WriteConfigValue(REGISTER_PATCH_PATH, sink.GetFilePath());
 		Settings::WriteConfigValue(REGISTER_PATCH_VERSION, m_appcast.Version);
 
 		if (!IsSmpRunning())
+		{
 			LaunchPatch(sink.GetFilePath());
+			CLog::Log(LOGINFO, "Launch patcher after download");
+		}
 	}
 	catch ( ... )
 	{
+		CLog::Log(LOGERROR, "Catch exception in UpdateDownloader::Run");
 		throw;
 	}
 

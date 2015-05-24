@@ -34,6 +34,8 @@
 #include <windows.h>
 #include <wininet.h>
 
+#include "utils\log.h"
+
 
 namespace winsparkle
 {
@@ -127,8 +129,11 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     urlc.lpszUrlPath = url_path;
     urlc.dwUrlPathLength = sizeof(url_path);
 
-    if ( !InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc) )
-        throw Win32Exception();
+		if (!InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc))
+		{
+			CLog::Log(LOGERROR, "InternetCrackUrlA failed");
+			throw Win32Exception();
+		}
 
     InetHandle inet = InternetOpen
                       (
@@ -138,8 +143,11 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
                           NULL, // lpszProxyBypass
                           0     // dwFlags
                       );
-    if ( !inet )
-        throw Win32Exception();
+		if (!inet)
+		{
+			CLog::Log(LOGERROR, "InternetOpen failed");
+			throw Win32Exception();
+		}
 
     DWORD dwFlags = 0;
     if ( flags & Download_NoCached )
@@ -156,8 +164,11 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
                           dwFlags,
                           NULL  // dwContext
                       );
-    if ( !conn )
-        throw Win32Exception();
+		if (!conn)
+		{
+			CLog::Log(LOGERROR, "InternetOpenUrlA failed");
+			throw Win32Exception();
+		}
 
     char buffer[10240];
 
@@ -166,7 +177,8 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     DWORD statusCode;
     if ( GetHttpHeader(conn, HTTP_QUERY_STATUS_CODE, statusCode) && statusCode >= 400 )
     {
-        throw std::runtime_error("Update file not found on the server.");
+			CLog::Log(LOGERROR, "Update file not found on the server.");
+      throw std::runtime_error("Update file not found on the server.");
     }
 
     // Get content length if possible:

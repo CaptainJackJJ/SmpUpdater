@@ -39,6 +39,8 @@
 #include <algorithm>
 #include <wx/utils.h>
 
+#include "utils\log.h"
+
 using namespace std;
 
 namespace winsparkle
@@ -240,10 +242,13 @@ void UpdateChecker::Run()
 
 				// Only check for updates in reasonable intervals:
 				if (currentTime - lastCheck >= interval)
-				{
+				{			
 					const std::string url = Settings::GetAppcastURL();
 					if (url.empty())
+					{
+						CLog::Log(LOGERROR, "Appcast URL not specified.");
 						throw std::runtime_error("Appcast URL not specified.");
+					}
 
 					StringDownloadSink appcast_xml;
 					DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
@@ -257,10 +262,10 @@ void UpdateChecker::Run()
 					if (Version == "")
 						Settings::ReadConfigValue(REGISTER_PLAYER_VERSION, Version);
 
-					// Check if our version is out of date.
+					CLog::Log(LOGINFO, "Check if our version is out of date.");
 					if (!appcast.IsValid() || CompareVersions(Version, appcast.Version) >= 0)
 					{
-						// The same or newer version is already installed.
+						CLog::Log(LOGINFO, "The same or newer version is already installed. local version %s, remote version %s", Version.c_str(), appcast.Version.c_str());
 						Sleep(1000 * 60);
 						continue;
 					}
@@ -280,6 +285,7 @@ void UpdateChecker::Run()
 					{
 						if (!IsSmpRunning())
 							LaunchPatch(PatchPath);
+						CLog::Log(LOGINFO, "Launch patch while idle time.");
 					}
 
 					Sleep(1000 * 60);
@@ -288,6 +294,7 @@ void UpdateChecker::Run()
 		}
 		catch (...)
 		{
+			CLog::Log(LOGERROR, "Catch exception in UpdateChecker::Run.");
 			throw;
 		}
 	}

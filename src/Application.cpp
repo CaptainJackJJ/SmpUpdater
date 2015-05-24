@@ -20,7 +20,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 
 	std::string strLogPath = CStringUtil::WideToAnsi(LogPath) + "\\";
 
-	CLog::Init(strLogPath, CStringUtil::WideToAnsi(APP_NAME));
+	CLog::Init(strLogPath, CStringUtil::WideToAnsi(APP_NAME), "Updater");
 
 #ifdef _DEBUG
 	CLog::SetLogLevel(LOG_LEVEL_DEBUG);
@@ -28,7 +28,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	CLog::SetLogLevel(LOG_LEVEL_NORMAL);
 #endif
 
-	CLog::Log(LOGINFO, "Updater launch");
+	CLog::Log(LOGINFO, "Startup %s", UPDATER_VERSION);
 
 	//Set update check info by register info
 
@@ -53,6 +53,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 			TerminateSmp();
 
 		LaunchPatch(PatchPath);
+		CLog::Log(LOGINFO, "Launch patch when startup");
 	}
 
 	//***

@@ -23,6 +23,7 @@
 #include <inttypes.h>
 #include <windows.h>
 #include "StringUtil.h"
+#include <assert.h>
 
 static const char* const levelNames[] =
 {"DEBUG", "INFO", "NOTICE", "WARNING", "ERROR", "SEVERE", "FATAL", "NONE"};
@@ -62,6 +63,9 @@ void CLog::Log(int loglevel, const char *format, ...)
     va_start(va, format);
 		LogString(loglevel, CStringUtil::FormatV(format, va));
     va_end(va);
+
+		if (loglevel == LOGERROR)
+			assert(0);
   }
 }
 

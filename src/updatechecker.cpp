@@ -232,7 +232,7 @@ void UpdateChecker::Run()
 		try
 		{
 			//in seconds
-			const int interval = 60 * 60;
+			const int ONE_HOUR_IN_SECONDS = 60 * 60; // one hour
 
 			while (true)
 			{
@@ -241,7 +241,7 @@ void UpdateChecker::Run()
 				const time_t currentTime = time(NULL);
 
 				// Only check for updates in reasonable intervals:
-				if (currentTime - lastCheck >= interval)
+				if (currentTime - lastCheck >= ONE_HOUR_IN_SECONDS)
 				{			
 					const std::string url = Settings::GetAppcastURL();
 					if (url.empty())
@@ -274,7 +274,7 @@ void UpdateChecker::Run()
 					m_downloader = new UpdateDownloader(appcast);
 					m_downloader->Start();
 
-					Sleep(1000 * interval);
+					Sleep(1000 * ONE_HOUR_IN_SECONDS);
 				}
 				else
 				{

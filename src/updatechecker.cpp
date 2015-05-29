@@ -274,7 +274,7 @@ void UpdateChecker::Run()
 					m_downloader = new UpdateDownloader(appcast);
 					m_downloader->Start();
 
-					Sleep(1000 * ONE_HOUR_IN_SECONDS);
+					Sleep(1000 * ONE_MINUTE_IN_SECONDS);
 				}
 				else
 				{

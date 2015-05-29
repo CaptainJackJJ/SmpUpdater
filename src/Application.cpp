@@ -71,6 +71,8 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 		//win_sparkle_cleanup();
 		//win_sparkle_set_appcast_url(feedUrl);
 		//win_sparkle_init();
+
+		Sleep(1000);
 	}
 
 	return 0;

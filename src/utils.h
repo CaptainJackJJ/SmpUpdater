@@ -117,8 +117,7 @@ inline void TerminateSmp()
 
 inline void LaunchPatch(std::wstring strPatchUrl)
 {
-	std::wstring strCommand = L"/i " + strPatchUrl + L" REINSTALL=ALL REINSTALLMODE=vomus /q";
-	ShellExecute(NULL, NULL, L"msiexec", strCommand.c_str(), NULL, 0);
+	ShellExecute(NULL, NULL, strPatchUrl.c_str(), L"/VERYSILENT", NULL, 0);
 }
 
 } // namespace winsparkle

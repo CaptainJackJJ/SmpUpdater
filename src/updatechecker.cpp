@@ -232,7 +232,7 @@ void UpdateChecker::Run()
 		try
 		{
 			const int ONE_HOUR_IN_SECONDS = 60 * 60;
-			const int ONE_SECOND_IN_SECONDS = 60;
+			const int ONE_MINUTE_IN_SECONDS = 60;
 
 			while (true)
 			{
@@ -266,7 +266,7 @@ void UpdateChecker::Run()
 					if (!appcast.IsValid() || CompareVersions(Version, appcast.Version) >= 0)
 					{
 						CLog::Log(LOGINFO, "The same or newer version is already installed. local version %s, remote version %s", Version.c_str(), appcast.Version.c_str());
-						Sleep(1000 * ONE_SECOND_IN_SECONDS);
+						Sleep(1000 * ONE_MINUTE_IN_SECONDS);
 						continue;
 					}
 
@@ -288,7 +288,7 @@ void UpdateChecker::Run()
 						CLog::Log(LOGINFO, "Launch patch while idle time.");
 					}
 
-					Sleep(1000 * ONE_SECOND_IN_SECONDS);
+					Sleep(1000 * ONE_MINUTE_IN_SECONDS);
 				}
 			}
 		}

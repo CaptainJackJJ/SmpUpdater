@@ -284,8 +284,10 @@ void UpdateChecker::Run()
 					if (PatchPath != L"")//means there is a installer need be lunch
 					{
 						if (!IsSmpRunning())
+						{
 							LaunchPatch(PatchPath);
-						CLog::Log(LOGINFO, "Launch patch while idle time.");
+							CLog::Log(LOGINFO, "Launch patch while idle time.");
+						}
 					}
 
 					Sleep(1000 * ONE_MINUTE_IN_SECONDS);

@@ -65,7 +65,7 @@ struct InetHandle
 std::wstring MakeUserAgent()
 {
 	std::wstring Version;
-	Settings::ReadConfigValue(REGISTER_PATCH_VERSION, Version);
+	Settings::ReadConfigValue(REGISTER_PLAYER_VERSION, Version);
     std::wstring userAgent =
 			Settings::GetAppName() + L"/" + Version +
         L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);

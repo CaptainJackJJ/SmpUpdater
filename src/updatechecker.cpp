@@ -258,9 +258,7 @@ void UpdateChecker::Run()
 					Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
 					std::string Version;
-					Settings::ReadConfigValue(REGISTER_PATCH_VERSION, Version);
-					if (Version == "")
-						Settings::ReadConfigValue(REGISTER_PLAYER_VERSION, Version);
+					Settings::ReadConfigValue(REGISTER_PLAYER_VERSION, Version);
 
 					CLog::Log(LOGINFO, "Check if our version is out of date.");
 					if (!appcast.IsValid() || CompareVersions(Version, appcast.Version) >= 0)
@@ -278,14 +276,14 @@ void UpdateChecker::Run()
 				}
 				else
 				{
-					std::wstring PatchPath;
-					Settings::ReadConfigValue(REGISTER_PATCH_PATH, PatchPath);
+					std::wstring InstallerPath;
+					Settings::ReadConfigValue(REGISTER_INSTALLER_PATH, InstallerPath);
 
-					if (PatchPath != L"")//means there is a installer need be lunch
+					if (InstallerPath != L"")//means there is a installer need be lunch
 					{
 						if (!IsSmpRunning())
 						{
-							LaunchPatch(PatchPath);
+							LaunchInstaller(InstallerPath);
 							CLog::Log(LOGINFO, "Launch patch while idle time.");
 						}
 					}

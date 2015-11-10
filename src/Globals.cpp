@@ -1,9 +1,8 @@
-const wchar_t* SMP_PROCESS_NAME = L"FoobarAppl10.exe";
-const char* REGISTER_PATCH_PATH = "PatchPath";
+const wchar_t* RPLAYER_PROCESS_NAME = L"RPlayer.exe";
+const char* REGISTER_INSTALLER_PATH = "InstallerPath";
 const char* FEED_URL = "http://downloads.sourceforge.net/project/smptest/appcast.xml";
 const wchar_t *COMPANY_NAME = L"PirateRabbit";
-const wchar_t *APP_NAME = L"RabbitPlayer";
+const wchar_t *APP_NAME = L"RPlayer";
 const char *REGISTER_PLAYER_VERSION = "PlayerVersion";
-const char *REGISTER_PATCH_VERSION = "PatchVersion";
-const char* UPDATER_VERSION = "1.0.1";
+const char* UPDATER_VERSION = "1.0.0";
 

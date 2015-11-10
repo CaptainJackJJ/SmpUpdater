@@ -24,7 +24,7 @@
     <ProjectGuid>{524CCCF2-61EA-5B64-A1D9-FF5497027B5F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WinSparkle</RootNamespace>
-    <ProjectName>SmpUpdater</ProjectName>
+    <ProjectName>RPUpdater</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

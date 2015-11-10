@@ -86,7 +86,7 @@ inline bool IsSmpRunning()
 	start = Process32First(toolhelp, &processinfo);
 	while (start)
 	{ 
-	 if (wcscmp(processinfo.szExeFile, SMP_PROCESS_NAME) == 0)
+	 if (wcscmp(processinfo.szExeFile, RPLAYER_PROCESS_NAME) == 0)
 			return true;
 		processinfo.dwSize = sizeof(PROCESSENTRY32);
 		start = Process32Next(toolhelp, &processinfo);
@@ -105,7 +105,7 @@ inline void TerminateSmp()
 	start = Process32First(toolhelp, &processinfo);
 	while (start)
 	{
-		if (wcscmp(processinfo.szExeFile, SMP_PROCESS_NAME) == 0)
+		if (wcscmp(processinfo.szExeFile, RPLAYER_PROCESS_NAME) == 0)
 		{
 			::TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, processinfo.th32ProcessID), 0);
 			return;
@@ -115,7 +115,7 @@ inline void TerminateSmp()
 	}
 }
 
-inline void LaunchPatch(std::wstring strPatchUrl)
+inline void LaunchInstaller(std::wstring strPatchUrl)
 {
 	ShellExecute(NULL, NULL, strPatchUrl.c_str(), L"/VERYSILENT", NULL, 0);
 }

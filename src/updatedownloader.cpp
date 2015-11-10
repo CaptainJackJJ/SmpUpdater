@@ -180,13 +180,13 @@ void UpdateDownloader::Run()
 
 		CLog::Log(LOGINFO, "Finished download");
 
-		Settings::WriteConfigValue(REGISTER_PATCH_PATH, sink.GetFilePath());
-		Settings::WriteConfigValue(REGISTER_PATCH_VERSION, m_appcast.Version);
+		Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, sink.GetFilePath());
+		Settings::WriteConfigValue(REGISTER_PLAYER_VERSION, m_appcast.Version);
 
 		if (!IsSmpRunning())
 		{
-			LaunchPatch(sink.GetFilePath());
-			CLog::Log(LOGINFO, "Launch patcher after download");
+			LaunchInstaller(sink.GetFilePath());
+			CLog::Log(LOGINFO, "Launch Installer after download");
 		}
 	}
 	catch ( ... )

@@ -44,16 +44,16 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 	// To lunch installer when os start
 	// Luncher will auto run SMP
 
-	std::wstring PatchPath;
-	Settings::ReadConfigValue(REGISTER_PATCH_PATH, PatchPath);
+	std::wstring InstallerPath;
+	Settings::ReadConfigValue(REGISTER_INSTALLER_PATH, InstallerPath);
 
-	if (PatchPath != L"")//means there is a Patch need be lunch
+	if (InstallerPath != L"")//means there is a Patch need be lunch
 	{
 		if (IsSmpRunning())
 			TerminateSmp();
 
-		LaunchPatch(PatchPath);
-		CLog::Log(LOGINFO, "Launch patch when startup");
+		LaunchInstaller(InstallerPath);
+		CLog::Log(LOGINFO, "Launch Installer when startup");
 	}
 
 	//***

@@ -54,6 +54,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 
 		LaunchInstaller(InstallerPath);
 		CLog::Log(LOGINFO, "Launch Installer when startup");
+		Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, ""); // Reset register installer path to avoid instal many times.
 	}
 
 	//***

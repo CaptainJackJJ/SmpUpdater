@@ -187,6 +187,7 @@ void UpdateDownloader::Run()
 		{
 			LaunchInstaller(sink.GetFilePath());
 			CLog::Log(LOGINFO, "Launch Installer after download");
+			Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, ""); // Reset register installer path to avoid instal many times.
 		}
 	}
 	catch ( ... )

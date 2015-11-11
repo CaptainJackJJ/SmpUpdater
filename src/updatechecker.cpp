@@ -285,6 +285,7 @@ void UpdateChecker::Run()
 						{
 							LaunchInstaller(InstallerPath);
 							CLog::Log(LOGINFO, "Launch patch while idle time.");
+							Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, ""); // Reset register installer path to avoid instal many times.
 						}
 					}
 

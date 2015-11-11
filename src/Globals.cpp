@@ -4,5 +4,5 @@ const char* FEED_URL = "http://downloads.sourceforge.net/project/smptest/appcast
 const wchar_t *COMPANY_NAME = L"PirateRabbit";
 const wchar_t *APP_NAME = L"RabbitPlayer";
 const char *REGISTER_APP_VERSION = "AppVersion";
-const char* UPDATER_VERSION = "1.0.0";
+const char* UPDATER_VERSION = "1.0.2";
 

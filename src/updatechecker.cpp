@@ -294,7 +294,7 @@ void UpdateChecker::Run()
 		}
 		catch (...)
 		{
-			CLog::Log(LOGERROR, "Catch exception in UpdateChecker::Run.");
+			CLog::Log(LOGWARNING, "Catch exception in UpdateChecker::Run.");
 			// Do nothing, because we need to keep this thread runing to check update
 		}
 	}

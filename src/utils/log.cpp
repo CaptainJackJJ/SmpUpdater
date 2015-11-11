@@ -65,8 +65,8 @@ void CLog::Log(int loglevel, const char *format, ...)
 		LogString(loglevel, CStringUtil::FormatV(format, va));
     va_end(va);
 
-		if (loglevel == LOGERROR)
-			assert(0);
+	if (loglevel == LOGERROR)
+	  assert(0);
   }
 }
 

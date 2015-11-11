@@ -181,7 +181,7 @@ void UpdateDownloader::Run()
 		CLog::Log(LOGINFO, "Finished download");
 
 		Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, sink.GetFilePath());
-		Settings::WriteConfigValue(REGISTER_PLAYER_VERSION, m_appcast.Version);
+		Settings::WriteConfigValue(REGISTER_APP_VERSION, m_appcast.Version);
 
 		if (!IsSmpRunning())
 		{

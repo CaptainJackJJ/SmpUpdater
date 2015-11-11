@@ -65,7 +65,7 @@ struct InetHandle
 std::wstring MakeUserAgent()
 {
 	std::wstring Version;
-	Settings::ReadConfigValue(REGISTER_PLAYER_VERSION, Version);
+	Settings::ReadConfigValue(REGISTER_APP_VERSION, Version);
     std::wstring userAgent =
 			Settings::GetAppName() + L"/" + Version +
         L" WinSparkle/" + AnsiToWide(WIN_SPARKLE_VERSION_STRING);
@@ -131,7 +131,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
 
 		if (!InternetCrackUrlA(url.c_str(), 0, ICU_DECODE, &urlc))
 		{
-			CLog::Log(LOGERROR, "InternetCrackUrlA failed");
+			CLog::Log(LOGWARNING, "InternetCrackUrlA failed");
 			throw Win32Exception();
 		}
 
@@ -145,7 +145,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
                       );
 		if (!inet)
 		{
-			CLog::Log(LOGERROR, "InternetOpen failed");
+			CLog::Log(LOGWARNING, "InternetOpen failed");
 			throw Win32Exception();
 		}
 
@@ -166,7 +166,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
                       );
 		if (!conn)
 		{
-			CLog::Log(LOGERROR, "InternetOpenUrlA failed");
+			CLog::Log(LOGWARNING, "InternetOpenUrlA failed");
 			throw Win32Exception();
 		}
 
@@ -177,7 +177,7 @@ void DownloadFile(const std::string& url, IDownloadSink *sink, int flags)
     DWORD statusCode;
     if ( GetHttpHeader(conn, HTTP_QUERY_STATUS_CODE, statusCode) && statusCode >= 400 )
     {
-			CLog::Log(LOGERROR, "Update file not found on the server.");
+	  CLog::Log(LOGWARNING, "Update file not found on the server.");
       throw std::runtime_error("Update file not found on the server.");
     }
 

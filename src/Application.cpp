@@ -90,13 +90,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT cmdShow)
 
 	//Set update check info by register info
 
-	win_sparkle_set_appcast_url(FEED_URL);
-	win_sparkle_set_app_details(COMPANY_NAME, APP_NAME, L"");
-	win_sparkle_set_automatic_check_for_updates(1);
-	const int ONE_HOUR = 60 * 60;
-	win_sparkle_set_update_check_interval(ONE_HOUR);
-
-	Settings::WriteConfigValue("LastCheckTime", "0");
+	win_sparkle_set_app_details(COMPANY_NAME, APP_NAME);
 
 	win_sparkle_init();
 

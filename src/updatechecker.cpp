@@ -231,31 +231,30 @@ void UpdateChecker::Run()
 
 		try
 		{
-			const int ONE_HOUR_IN_SECONDS = 60 * 60;
-			const int ONE_MINUTE_IN_SECONDS = 60;
+			const int ONE_HOUR_IN_MS = 60 * 60 * 1000;
+			const int ONE_MINUTE_IN_MS = 60 * 1000;
 
 			while (true)
 			{
-				time_t lastCheck = 0;
-				Settings::ReadConfigValue("LastCheckTime", lastCheck);
-				const time_t currentTime = time(NULL);
-
-				// Only check for updates in reasonable intervals:
-				if (currentTime - lastCheck >= ONE_HOUR_IN_SECONDS)
-				{			
-					const std::string url = Settings::GetAppcastURL();
-					if (url.empty())
+				std::wstring InstallerPath;
+				Settings::ReadConfigValue(REGISTER_INSTALLER_PATH, InstallerPath);
+				if (InstallerPath != L"")//means there is a installer need be lunch
+				{
+					if (!IsRPlayerRunning())
 					{
-						CLog::Log(LOGERROR, "Appcast URL not specified.");
-						throw std::runtime_error("Appcast URL not specified.");
+						LaunchInstaller(InstallerPath);
+						CLog::Log(LOGINFO, "Launch installer while idle time.");
+						Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, ""); // Reset register installer path to avoid instal many times.
 					}
 
+					Sleep(ONE_MINUTE_IN_MS);
+				}
+				else // Check update at every ONE_HOUR_IN_MS
+				{
 					StringDownloadSink appcast_xml;
-					DownloadFile(url, &appcast_xml, GetAppcastDownloadFlags());
+					DownloadFile(FEED_URL, &appcast_xml, GetAppcastDownloadFlags());
 
 					Appcast appcast = Appcast::Load(appcast_xml.data);
-
-					Settings::WriteConfigValue("LastCheckTime", time(NULL));
 
 					std::string Version;
 					Settings::ReadConfigValue(REGISTER_APP_VERSION, Version);
@@ -264,7 +263,7 @@ void UpdateChecker::Run()
 					if (!appcast.IsValid() || CompareVersions(Version, appcast.Version) >= 0)
 					{
 						CLog::Log(LOGINFO, "The same or newer version is already installed. local version %s, remote version %s", Version.c_str(), appcast.Version.c_str());
-						Sleep(1000 * ONE_MINUTE_IN_SECONDS);
+						Sleep(ONE_HOUR_IN_MS);
 						continue;
 					}
 
@@ -272,30 +271,13 @@ void UpdateChecker::Run()
 					m_downloader = new UpdateDownloader(appcast);
 					m_downloader->Start();
 
-					Sleep(1000 * ONE_MINUTE_IN_SECONDS);
-				}
-				else
-				{
-					std::wstring InstallerPath;
-					Settings::ReadConfigValue(REGISTER_INSTALLER_PATH, InstallerPath);
-
-					if (InstallerPath != L"")//means there is a installer need be lunch
-					{
-						if (!IsSmpRunning())
-						{
-							LaunchInstaller(InstallerPath);
-							CLog::Log(LOGINFO, "Launch patch while idle time.");
-							Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, ""); // Reset register installer path to avoid instal many times.
-						}
-					}
-
-					Sleep(1000 * ONE_MINUTE_IN_SECONDS);
+					Sleep(ONE_HOUR_IN_MS);
 				}
 			}
 		}
 		catch (...)
 		{
-			CLog::Log(LOGWARNING, "Catch exception in UpdateChecker::Run.");
+			CLog::Log(LOGWARNING, "Catch exception in UpdateChecker::Run. Try check update again");
 			// Do nothing, because we need to keep this thread runing to check update
 		}
 	}

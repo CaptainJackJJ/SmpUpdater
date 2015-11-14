@@ -181,9 +181,8 @@ void UpdateDownloader::Run()
 		CLog::Log(LOGINFO, "Finished download");
 
 		Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, sink.GetFilePath());
-		Settings::WriteConfigValue(REGISTER_APP_VERSION, m_appcast.Version);
 
-		if (!IsSmpRunning())
+		if (!IsRPlayerRunning())
 		{
 			LaunchInstaller(sink.GetFilePath());
 			CLog::Log(LOGINFO, "Launch Installer after download");
@@ -192,7 +191,7 @@ void UpdateDownloader::Run()
 	}
 	catch ( ... )
 	{
-		CLog::Log(LOGERROR, "Catch exception in UpdateDownloader::Run");
+		CLog::Log(LOGERROR, "Catch exception in UpdateDownloader::Run. Try download again");
 		throw;
 	}
 

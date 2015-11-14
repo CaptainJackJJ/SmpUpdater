@@ -75,7 +75,7 @@ inline std::wstring AnsiToWide(const std::string& s)
     return ConvertString<char, wchar_t>(s);
 }
 
-inline bool IsSmpRunning()
+inline bool IsRPlayerRunning()
 {
 	HANDLE toolhelp;
 	PROCESSENTRY32 processinfo;

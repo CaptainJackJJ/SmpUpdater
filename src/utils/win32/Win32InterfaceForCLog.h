@@ -28,7 +28,7 @@ class CWin32InterfaceForCLog
 public:
   CWin32InterfaceForCLog();
   ~CWin32InterfaceForCLog();
-  bool OpenLogFile(const std::string& logFilename, const std::string& backupOldLogToFilename);
+  bool OpenLogFile(const std::wstring& logFilename, int nLogLimitedSize);
   void CloseLogFile(void);
   bool WriteStringToLog(const std::string& logString);
   void PrintDebugString(const std::string& debugString);

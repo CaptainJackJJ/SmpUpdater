@@ -43,6 +43,8 @@ typedef class CWin32InterfaceForCLog PlatformInterfaceForCLog;
 
 #include <mutex> 
 
+#define  LOG_LIMITED_SIZE  5*1024*1024   //the size is 5M
+
 class CLog
 {
 public:
@@ -53,7 +55,7 @@ public:
   static void LogFunction(int loglevel, IN_OPT_STRING const char* functionName, PRINTF_FORMAT_STRING const char* format, ...) PARAM3_PRINTF_FORMAT;
 #define LogF(loglevel,format,...) LogFunction((loglevel),__FUNCTION__,(format),##__VA_ARGS__)
   static void MemDump(char *pData, int length);
-	static bool Init(const std::string& path, const std::string& FileName, const std::string& ModuleName);
+  static bool Init(const std::wstring& dir, const std::wstring& FileName);
   static void PrintDebugString(const std::string& line); // universal interface for printing debug strings
   static void SetLogLevel(int level);
   static int  GetLogLevel();
@@ -77,5 +79,5 @@ private:
 	static std::string m_repeatLine;
 	static int         m_logLevel;
 	static int         m_extraLogLevels;
-	static std::string m_strModuleName;
+	static int         m_logLimitedSize;
 };

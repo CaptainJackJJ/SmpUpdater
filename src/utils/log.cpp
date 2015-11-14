@@ -39,7 +39,7 @@ int         CLog::m_repeatLogLevel;
 std::string CLog::m_repeatLine;
 int         CLog::m_logLevel;
 int         CLog::m_extraLogLevels;
-std::string CLog::m_strModuleName;
+int         CLog::m_logLimitedSize;
 
 CLog::CLog()
 {}
@@ -116,22 +116,41 @@ void CLog::LogString(int logLevel, const std::string& logString)
 	m_reMutex.unlock();
 }
 
-bool CLog::Init(const std::string& path, const std::string& FileName, const std::string& ModuleName)
+bool CLog::Init(const std::wstring& dir, const std::wstring& FileName)
 {
 	m_reMutex.lock();
+
+	m_logLimitedSize = LOG_LIMITED_SIZE;
 
 	m_repeatCount = 0;
 	m_repeatLogLevel = -1;
 	m_logLevel = LOG_LEVEL_DEBUG;
 	m_extraLogLevels = 0;
 
-	m_strModuleName = ModuleName;
   // the log folder location is initialized in the CAdvancedSettings
   // constructor and changed in CApplication::Create()
 
-	bool b = m_platform.OpenLogFile(path + FileName + ".log", path + FileName + ".old.log");
+
+	bool bOpen = m_platform.OpenLogFile(dir + FileName + L".log", m_logLimitedSize);
+
+	if (bOpen)
+	{
+		SYSTEMTIME time;
+		GetLocalTime(&time);
+
+		CLog::Log(LOGNOTICE, "=================================================================");
+		CLog::Log(LOGNOTICE, "===================================================================");
+		CLog::Log(LOGNOTICE, "============== %d-%02d-%02d, %02.2d:%02.2d, log service starting ==============",
+			time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute);
+
+	}
+	else
+	{
+		PrintDebugString("Plcore::CLog init fail");
+	}
+
 	m_reMutex.unlock();
-	return b;
+	return bOpen;
 }
 
 void CLog::MemDump(char *pData, int length)
@@ -235,7 +254,7 @@ bool CLog::WriteLogString(int logLevel, const std::string& logString)
                                   minute,
                                   second,
 																	(uint64_t)::GetCurrentThreadId(),
-																	levelNames[logLevel]) + m_strModuleName + "  " + strData;
+																	levelNames[logLevel]) + "  " + strData;
 
   return m_platform.WriteStringToLog(strData);
 }

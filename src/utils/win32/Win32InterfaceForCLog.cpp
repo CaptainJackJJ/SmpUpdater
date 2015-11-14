@@ -42,31 +42,41 @@ CWin32InterfaceForCLog::~CWin32InterfaceForCLog()
     CloseHandle(m_hFile);
 }
 
-bool CWin32InterfaceForCLog::OpenLogFile(const std::string& logFilename, const std::string& backupOldLogToFilename)
+bool CWin32InterfaceForCLog::OpenLogFile(const std::wstring& logFilePath, int nLogLimitedSize)
 {
   if (m_hFile != INVALID_HANDLE_VALUE)
     return false; // file was already opened
 
-	std::wstring strLogFileW = CStringUtil::AnsiToWide(logFilename);
-	std::wstring strLogFileOldW = CStringUtil::AnsiToWide(backupOldLogToFilename);
+  DWORD dwCreationDisposition = OPEN_ALWAYS;
+  struct __stat64 info;
+  memset(&info, 0, sizeof(__stat64));
 
-  if (strLogFileW.empty())
-    return false;
-
-  if (!strLogFileOldW.empty())
+  if (_wstat64(logFilePath.c_str(), &info) == 0)
   {
-    (void)DeleteFileW(strLogFileOldW.c_str()); // if it's failed, try to continue
-    (void)MoveFileW(strLogFileW.c_str(), strLogFileOldW.c_str()); // if it's failed, try to continue
+	//file size larger than nLogLimitedSize,creat a new file
+	if (info.st_size > nLogLimitedSize)
+	{
+		dwCreationDisposition = TRUNCATE_EXISTING;
+	}
   }
 
-  m_hFile = CreateFileW(strLogFileW.c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL,
-                                  CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+  m_hFile = CreateFileW(logFilePath.c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL,
+	  dwCreationDisposition, FILE_ATTRIBUTE_NORMAL, NULL);
   if (m_hFile == INVALID_HANDLE_VALUE)
-    return false;
+	  return false;
 
-  static const unsigned char BOM[3] = { 0xEF, 0xBB, 0xBF };
-  DWORD written;
-  (void)WriteFile(m_hFile, BOM, sizeof(BOM), &written, NULL); // write BOM, ignore possible errors
+  //set file pointer to the file end
+  if (OPEN_ALWAYS == dwCreationDisposition)
+  {
+	  SetFilePointer(m_hFile, info.st_size, 0, FILE_BEGIN);
+  }
+
+  if (TRUNCATE_EXISTING == dwCreationDisposition || 0 == info.st_size)
+  {
+	  static const unsigned char BOM[3] = { 0xEF, 0xBB, 0xBF };
+	  DWORD written;
+	  (void)WriteFile(m_hFile, BOM, sizeof(BOM), &written, NULL); // write BOM, ignore possible errors
+  }
 
   return true;
 }

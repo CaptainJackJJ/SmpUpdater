@@ -71,14 +71,14 @@ int messageLoop()
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT cmdShow)
 {
-	wchar_t LogPath[MAX_PATH];
-	HRESULT hr = SHGetFolderPathW(0, CSIDL_MYDOCUMENTS, 0, 0, LogPath);
+	wchar_t LogDir[MAX_PATH];
+	HRESULT hr = SHGetFolderPathW(0, CSIDL_MYDOCUMENTS, 0, 0, LogDir);
 	if (!SUCCEEDED(hr))
 		assert(0);
 
-	std::string strLogPath = CStringUtil::WideToAnsi(LogPath) + "\\";
+	std::wstring strLogDir = LogDir;
 
-	CLog::Init(strLogPath, CStringUtil::WideToAnsi(APP_NAME), "Updater");
+	CLog::Init(strLogDir + "\\", UPDATER_NAME);
 
 #ifdef _DEBUG
 	CLog::SetLogLevel(LOG_LEVEL_DEBUG);

@@ -10,6 +10,7 @@ extern const wchar_t* APP_NAME;
 extern const char* REGISTER_APP_VERSION;
 
 extern const char* UPDATER_VERSION;
+extern const wchar_t* UPDATER_NAME;
 //#define WINSPARKLE_ORG
 
 #endif //GLOBALS_H

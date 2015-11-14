@@ -98,26 +98,6 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT cmdShow)
 
 	Settings::WriteConfigValue("LastCheckTime", "0");
 
-	//---If there is an installer waiting for lunch, then lunch it. 
-	// To lunch installer when os start
-	// Luncher will auto run SMP
-
-	std::wstring InstallerPath;
-	Settings::ReadConfigValue(REGISTER_INSTALLER_PATH, InstallerPath);
-
-	if (InstallerPath != L"")//means there is a Patch need be lunch
-	{
-		if (IsSmpRunning())
-			TerminateSmp();
-
-		LaunchInstaller(InstallerPath);
-		CLog::Log(LOGINFO, "Launch Installer when startup");
-		Settings::WriteConfigValue(REGISTER_INSTALLER_PATH, ""); // Reset register installer path to avoid instal many times.
-	}
-
-	//***
-
-
 	win_sparkle_init();
 
 	if (registerMyClass() && createMyWindow(cmdShow))

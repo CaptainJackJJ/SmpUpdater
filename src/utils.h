@@ -117,7 +117,8 @@ inline void TerminateSmp()
 
 inline void LaunchInstaller(std::wstring strPatchUrl)
 {
-	ShellExecute(NULL, NULL, strPatchUrl.c_str(), L"/VERYSILENT", NULL, 0);
+	ShellExecute(NULL, L"open", strPatchUrl.c_str()
+		, L"/VERYSILENT /SUPPRESSMSGBOXES /NORESTART", NULL, SW_HIDE);
 }
 
 } // namespace winsparkle

@@ -11,7 +11,65 @@
 using namespace winsparkle;
 
 
-INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
+LRESULT CALLBACK onMainWndMessage(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;    
+	default:
+		return DefWindowProc(wnd, msg, wParam, lParam);
+	}
+	return 0;
+}
+
+bool registerMyClass()
+{
+	WNDCLASSEX  wce = { 0 };
+	wce.cbSize = sizeof(wce);
+	wce.style = CS_VREDRAW | CS_HREDRAW;
+	wce.lpfnWndProc = &onMainWndMessage;  
+	wce.hInstance = GetModuleHandle(0);
+	wce.hIcon = LoadIcon(0, MAKEINTRESOURCE(IDI_WINLOGO));
+	wce.hCursor = LoadCursor(0, MAKEINTRESOURCE(IDC_ARROW));
+	wce.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_BTNFACE + 1);
+	wce.lpszClassName = L"ClassName"; 
+	wce.hIconSm = wce.hIcon;
+	return 0 != RegisterClassEx(&wce);
+}
+
+bool createMyWindow(int cmdShow)
+{
+	HWND mainWnd = CreateWindowEx(0, L"ClassName", L"Demo", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		0, 0, GetModuleHandle(0), 0);
+	if (0 != mainWnd) 
+	{
+		//ShowWindow(mainWnd, cmdShow);
+		//UpdateWindow(mainWnd);
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
+}
+
+int messageLoop() 
+{
+	MSG msg;
+	while (GetMessage(&msg, 0, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+	return static_cast<int>(msg.wParam);
+}
+
+
+
+INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT cmdShow)
 {
 	wchar_t LogPath[MAX_PATH];
 	HRESULT hr = SHGetFolderPathW(0, CSIDL_MYDOCUMENTS, 0, 0, LogPath);
@@ -62,18 +120,16 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR commandLine, INT)
 
 	win_sparkle_init();
 
-	while (true)
+	if (registerMyClass() && createMyWindow(cmdShow))
 	{
-		//---Wait SMP's connect
-
-		
-		//---Set update check info by the info that SMP sent
-
-		//win_sparkle_cleanup();
-		//win_sparkle_set_appcast_url(feedUrl);
-		//win_sparkle_init();
-
-		Sleep(1000);
+		return messageLoop();
+	}
+	else 
+	{
+		std::ostringstream msg;
+		msg << "Create main wnd failed, error code£º" << GetLastError();
+		MessageBoxA(0, msg.str().c_str(), 0, MB_OK | MB_ICONSTOP);
+		return 0;
 	}
 
 	return 0;
